@@ -58,10 +58,11 @@ int main() {
     scanf("%lf %lf", &a1, &b1);
     printf("Digite a parte real e imaginária do segundo número complexo (a b): ");
     scanf("%lf %lf", &a2, &b2);
-
     Complexo* c1 = criar_complexo(a1, b1);
     Complexo* c2 = criar_complexo(a2, b2);
 
+    imprimir_complexo(c1);
+    imprimir_complexo(c2);
     if (!c1 || !c2) {
         printf("Erro ao alocar memória para números complexos.\n");
         return 1;
