@@ -20,3 +20,25 @@ int raizes(float a, float b, float c, float* x1, float* x2) {
         return 2; // Existem duas raízes reais distintas
     }
 }
+
+int main() {
+    float a, b, c, x1, x2;
+    int num_raizes;
+
+    // Exemplo de uso da função raizes
+    a = 1.0;
+    b = -3.0;
+    c = 2.0;
+
+    num_raizes = raizes(a, b, c, &x1, &x2);
+
+    if (num_raizes == 0) {
+        printf("Nao existem raizes reais.\n");
+    } else if (num_raizes == 1) {
+        printf("Existe uma raiz real: x = %.2f\n", x1);
+    } else {
+        printf("Existem duas raizes reais distintas: x1 = %.2f, x2 = %.2f\n", x1, x2);
+    }
+
+    return 0;
+}
