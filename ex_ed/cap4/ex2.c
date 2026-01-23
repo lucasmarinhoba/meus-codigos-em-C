@@ -1,4 +1,4 @@
-#include "mat_tri_inf.h"
+#include "ex2.h"
 #include <stdlib.h>
 
 struct MatTriInf {
@@ -31,7 +31,7 @@ void libera(MatTriInf *m) {
 }
 
 #include <stdio.h>
-#include "mat_tri_inf.h"
+#include "ex2.h"
 
 int main() {
     MatTriInf *m = cria(3);
