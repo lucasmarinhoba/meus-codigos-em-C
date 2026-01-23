@@ -1,7 +1,7 @@
-#ifndef MAT_TRI_INF_H
-#define MAT_TRI_INF_H
+#ifndef EX2_H
+#define EX2_H
 
-typedef struct MatTriInf MatTriInf; // tipo opaco (usuário não vê os campos)
+typedef struct MatTriInf MatTriInf;
 
 MatTriInf* cria(int n);
 void atribui(MatTriInf *m, int i, int j, double val);
