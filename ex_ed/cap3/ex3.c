@@ -1,7 +1,7 @@
 /*Implemente uma função que receba como parâmetro um vetor de números inteiros (vet) de tamanho n 
 e inverta a ordem dos elementos armazenados nesse vetor.*/
 #include <stdio.h>
-void inverterVetor(int vet[], int n) {
+void inverterVetor(int* vet, int n) {
     int inicio = 0;
     int fim = n - 1;
     while (inicio < fim) {

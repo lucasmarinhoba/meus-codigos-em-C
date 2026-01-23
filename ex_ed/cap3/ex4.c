@@ -2,10 +2,7 @@
 Cada polinômio é definido por um vetor que contém seus coeficientes. Por exemplo,
  o polinômio de grau 2, 
 double avalia(double* poli, int grau, double x);*/
-
-#include <stdio.h>
-#include <stdio.h>
-
+#include <math.h>
 #include <stdio.h>
 
 double avalia(double* pol, int grau, double x);
@@ -22,11 +19,12 @@ int main() {
 }
 
 double avalia(double* pol, int grau, double x) {
-    double resultado = pol[grau];
+    double resultado = 0.0;
 
-    for (int i = grau - 1; i >= 0; i--) {
-        resultado = resultado * x + pol[i];
+    for (int i = 0; i <= grau; i++) {
+        resultado += pol[i] * pow(x, i);
     }
 
     return resultado;
 }
+
