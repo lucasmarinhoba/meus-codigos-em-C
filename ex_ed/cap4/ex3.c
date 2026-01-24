@@ -1,98 +1,70 @@
+#include "ex2.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-/* ============================================================
-   TAD — MATRIZ TRIANGULAR SUPERIOR (MTS)
-   Armazena somente elementos com j >= i
-   Memória mínima: n(n+1)/2 valores
-   ============================================================ */
+struct MatTri {
+    int n;
+    double *dados;
+};
 
-typedef struct {
-    int n;       // ordem da matriz
-    double *v;   // vetor com os valores da parte triangular superior
-} MTS;
-
-/* ------------------------------------------------------------
-   Cria matriz triangular superior
-   ------------------------------------------------------------ */
-MTS *MTS_cria(int n) {
-    MTS *m = malloc(sizeof(MTS));
+MatTri* cria(int n) {
+    MatTri *m = malloc(sizeof(MatTri));
     m->n = n;
-    m->v = malloc(n * (n + 1) / 2 * sizeof(double));
+    m->dados = malloc((n*(n+1)/2) * sizeof(double));
+    for (int i = 0; i < n*(n+1)/2; i++)
+        m->dados[i] = 0.0;
     return m;
 }
 
-/* ------------------------------------------------------------
-   Libera MTS
-   ------------------------------------------------------------ */
-void MTS_libera(MTS *m) {
-    free(m->v);
+void atribui(MatTri *m, int i, int j, double val) {
+    if (i > j) return;  // só guarda parte SUPERIOR
+    int pos = i*(2*m->n - i + 1)/2 + (j - i);
+    m->dados[pos] = val;
+}
+
+double acessa(MatTri *m, int i, int j) {
+    if (i > j) return 0.0;
+    int pos = i*(2*m->n - i + 1)/2 + (j - i);
+    return m->dados[pos];
+}
+
+void libera(MatTri *m) {
+    free(m->dados);
     free(m);
 }
 
-/* ------------------------------------------------------------
-   Calcula índice no vetor para posição (i,j), com j >= i
-   Fórmula: index = i*n - (i*(i-1))/2 + (j - i)
-   ------------------------------------------------------------ */
-int MTS_indice(int n, int i, int j) {
-    return i * n - (i * (i - 1)) / 2 + (j - i);
-}
+int main() {
+    int n = 4;
+    MatTri *m = cria(n);
 
-/* ------------------------------------------------------------
-   Define valor na posição (i,j)
-   Se j < i → não armazena (é zero)
-   ------------------------------------------------------------ */
-void MTS_set(MTS *m, int i, int j, double valor) {
-    if (j < i) return;  // abaixo da diagonal → sempre zero
-    int idx = MTS_indice(m->n, i, j);
-    m->v[idx] = valor;
-}
+    // Atribuindo valores válidos (i <= j)
+    atribui(m, 0, 0, 1);
+    atribui(m, 0, 1, 2);
+    atribui(m, 0, 2, 3);
+    atribui(m, 0, 3, 4);
+    atribui(m, 1, 1, 5);
+    atribui(m, 1, 2, 6);
+    atribui(m, 1, 3, 7);
+    atribui(m, 2, 2, 8);
+    atribui(m, 2, 3, 9);
+    atribui(m, 3, 3, 10);
 
-/* ------------------------------------------------------------
-   Obtém valor da posição (i,j)
-   Se j < i → retorna zero
-   ------------------------------------------------------------ */
-double MTS_get(MTS *m, int i, int j) {
-    if (j < i) return 0.0;
-    int idx = MTS_indice(m->n, i, j);
-    return m->v[idx];
-}
+    // Tentativa inválida (inferior)
+    atribui(m, 3, 0, 99);  // deve ser ignorado
 
-/* ------------------------------------------------------------
-   Imprime matriz completa (para depuração)
-   ------------------------------------------------------------ */
-void MTS_imprime(MTS *m) {
-    for (int i = 0; i < m->n; i++) {
-        for (int j = 0; j < m->n; j++) {
-            printf("%6.1lf ", MTS_get(m, i, j));
+    printf("Matriz triangular superior %dx%d:\n\n", n, n);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%5.1f ", acessa(m, i, j));
         }
         printf("\n");
     }
-}
 
-/* ============================================================
-   EXEMPLO DE USO DO TAD
-   ============================================================ */
+    printf("\nTestes isolados:\n");
+    printf("m(0,3) = %.1f (esperado 4)\n", acessa(m,0,3));
+    printf("m(3,0) = %.1f (esperado 0)\n", acessa(m,3,0));
 
-int main() {
-    int n = 4;
-    MTS *A = MTS_cria(n);
-
-    // Preenche apenas a região válida (j >= i)
-    int k = 1;
-    for (int i = 0; i < n; i++) {
-        for (int j = i; j < n; j++) {
-            MTS_set(A, i, j, k++);
-        }
-    }
-
-    printf("Matriz Triangular Superior:\n");
-    MTS_imprime(A);
-
-    printf("\nExemplo: A[1][3] = %.1lf\n", MTS_get(A, 1, 3));
-    printf("Exemplo: A[3][1] = %.1lf (abaixo da diagonal → zero)\n",
-           MTS_get(A, 3, 1));
-
-    MTS_libera(A);
+    libera(m);
     return 0;
 }
