@@ -73,3 +73,71 @@ void shift_string_direita(char *str) {
 
     str[0] = ultimo; // coloca último no começo
 }
+
+
+char* minisculo_novo(const char *str) {
+    int n = strlen(str);
+    char *nova = malloc((n + 1) * sizeof(char));
+    if (!nova) return NULL;
+
+    for (int i = 0; i <= n; i++) {  // inclui '\0'
+        nova[i] = tolower(str[i]);
+    }
+
+    return nova;
+}
+
+char* shift_string_novo(const char *str) {
+    int n = strlen(str);
+    char *nova = malloc((n + 1) * sizeof(char));
+    if (!nova) return NULL;
+
+    for (int i = 0; i <= n; i++) {
+        nova[i] = str[i];
+
+        if (nova[i] >= 'a' && nova[i] <= 'z')
+            nova[i] = 'a' + (nova[i] - 'a' + 1) % 26;
+
+        else if (nova[i] >= 'A' && nova[i] <= 'Z')
+            nova[i] = 'A' + (nova[i] - 'A' + 1) % 26;
+    }
+
+    return nova;
+}
+
+
+char* string_apostada_novo(const char *str) {
+    int n = strlen(str);
+    char *nova = malloc((n + 1) * sizeof(char));
+    if (!nova) return NULL;
+
+    for (int i = 0; i <= n; i++) {
+        nova[i] = str[i];
+
+        if (nova[i] >= 'a' && nova[i] <= 'z')
+            nova[i] = 'a' + 'z' - nova[i];
+
+        else if (nova[i] >= 'A' && nova[i] <= 'Z')
+            nova[i] = 'A' + 'Z' - nova[i];
+    }
+
+    return nova;
+}
+
+
+char* shift_string_direita_novo(const char *str) {
+    int n = strlen(str);
+    char *nova = malloc((n + 1) * sizeof(char));
+    if (!nova) return NULL;
+
+    strcpy(nova, str);
+
+    if (n > 1) {
+        char ultimo = nova[n - 1];
+        for (int i = n - 1; i > 0; i--)
+            nova[i] = nova[i - 1];
+        nova[0] = ultimo;
+    }
+
+    return nova;
+}
