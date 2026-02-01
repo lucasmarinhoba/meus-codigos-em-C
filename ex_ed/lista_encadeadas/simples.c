@@ -39,26 +39,29 @@ void inserir_no_fim(No** cabeca, int valor) {
 }
 void inserir_ordenado(No** cabeca, int valor) {
 
+    // Lista vazia OU menor que o primeiro → início
     if (*cabeca == NULL || (*cabeca)->valor >= valor) {
         inserir_no_inicio(cabeca, valor);
         return;
     }
-    No* novo_no = criar_no(valor);
-    if (!novo_no) return;
+
     No* atual = *cabeca;
 
-    // Anda até o penúltimo ou até achar posição
+    // Anda até achar a posição
     while (atual->proximo != NULL && atual->proximo->valor < valor) {
         atual = atual->proximo;
     }
 
-    // Se chegou no final → usar função de fim
+    // Se é o final → usa função pronta
     if (atual->proximo == NULL) {
         inserir_no_fim(cabeca, valor);
         return;
     }
 
-    // Inserção no meio
+    // Agora sabemos que é no MEIO → cria o nó
+    No* novo_no = criar_no(valor);
+    if (!novo_no) return;
+
     novo_no->proximo = atual->proximo;
     atual->proximo = novo_no;
 }
@@ -78,12 +81,14 @@ void inserir_meio(No** cabeca, int valor, int posicao) {
     No* atual = *cabeca;
     int i = 0;
 
-    while (atual != NULL && i < posicao - 1) {
+    // Anda até o nó anterior à posição desejada
+    while (atual->proximo != NULL && i < posicao - 1) {
         atual = atual->proximo;
         i++;
     }
 
-    if (atual == NULL) {
+    // ❗ TESTE CORRETO DE ERRO
+    if (i < posicao - 1) {
         printf("Posicao invalida\n");
         return;
     }
@@ -106,6 +111,7 @@ int remover_inicio(No** cabeca) {
     free(temp);
     return valor;
 }
+
 int remover_fim(No** cabeca) {
     if (cabeca == NULL || *cabeca == NULL) {
         printf("Lista vazia\n");
