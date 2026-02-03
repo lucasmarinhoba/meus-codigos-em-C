@@ -89,9 +89,9 @@ void inserir_meio(No** cabeca, int valor, int posicao) {
 
 
 void inserir_ordenado(No** cabeca, int valor) {
-    if (cabeca == NULL) return;
+    if (!cabeca) return;
 
-    // Caso 1: lista vazia OU deve inserir no início
+    // Início
     if (*cabeca == NULL || (*cabeca)->valor >= valor) {
         inserir_no_inicio(cabeca, valor);
         return;
@@ -99,23 +99,27 @@ void inserir_ordenado(No** cabeca, int valor) {
 
     No* atual = *cabeca;
 
-    // Anda até achar a posição correta
-    while (atual->proximo != NULL && atual->proximo->valor < valor)
+    // Anda até achar posição
+    while (atual->proximo != NULL && atual->proximo->valor < valor) {
         atual = atual->proximo;
+    }
 
-    // Agora sim cria o nó (porque sabemos onde inserir)
+    // Fim
+    if (atual->proximo == NULL) {
+        inserir_no_fim(cabeca, valor);
+        return;
+    }
+
+    // Meio
     No* novo = criar_no(valor);
     if (!novo) return;
 
-    // Ajustes de ponteiros (lista DUPLA)
     novo->proximo = atual->proximo;
     novo->anterior = atual;
-
-    if (atual->proximo != NULL)
-        atual->proximo->anterior = novo;
-
+    atual->proximo->anterior = novo;
     atual->proximo = novo;
 }
+
 
 int remover_inicio(No** cabeca) {
     if (cabeca == NULL || *cabeca == NULL) return -1;
@@ -150,30 +154,36 @@ int remover_fim(No** cabeca) {
     free(atual);
     return valor;
 }
+
 int remover_valor(No** cabeca, int valor) {
-    if (cabeca == NULL || *cabeca == NULL) return -1;
+    if (!cabeca || !*cabeca) return -1;
 
     No* atual = *cabeca;
 
-    // Se o valor está no primeiro nó
+    // Caso 1: está no início
     if (atual->valor == valor)
         return remover_inicio(cabeca);
 
-    // Procura o valor a partir do segundo
+    // Procura a partir do segundo
+    atual = atual->proximo;
     while (atual != NULL && atual->valor != valor)
         atual = atual->proximo;
 
+    // Não encontrou
     if (atual == NULL) return -1;
 
-    // Ajusta os ponteiros (meio ou fim)
-    atual->anterior->proximo = atual->proximo;
+    // Caso 2: está no final
+    if (atual->proximo == NULL)
+        return remover_fim(cabeca);
 
-    if (atual->proximo != NULL)
-        atual->proximo->anterior = atual->anterior;
+    // Caso 3: está no meio
+    atual->anterior->proximo = atual->proximo;
+    atual->proximo->anterior = atual->anterior;
 
     free(atual);
     return valor;
 }
+
 
 void liberar_lista(No** cabeca) {
     if (cabeca == NULL) return;
@@ -223,6 +233,29 @@ void exibir(No* cabeca) {
     }
     printf("\n");
 }
+void inverter_lista_dupla(No** inicio) {
+    if (!inicio || !*inicio) return;
+
+    No* anterior = NULL;
+    No* atual = *inicio;
+    No* proximo = NULL;
+
+    while (atual != NULL) {
+        proximo = atual->proximo;   // guarda o próximo
+
+        // inverte os dois lados
+        atual->proximo = anterior;  // vira o prox
+        atual->anterior = proximo;  // vira o anterior
+
+        // anda pra frente (na lista original)
+        anterior = atual;
+        atual = proximo;
+    }
+
+    // novo início é o antigo último
+    *inicio = anterior;
+}
+
 int main() {
     No* lista = NULL;
 

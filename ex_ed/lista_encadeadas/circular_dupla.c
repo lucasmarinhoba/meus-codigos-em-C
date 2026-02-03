@@ -266,3 +266,26 @@ int comparar_listas(No* cabeca1, No* cabeca2) {
 
     return 1;
 }
+void inverter_lista(No** inicio) {
+    if (!inicio || !*inicio) return;
+
+    No* atual = *inicio;
+    No* anterior = NULL;
+    No* proximo;
+
+    // percorre todos os nós uma vez
+    while (anterior != *inicio) {
+        proximo = atual->proximo;      // guarda o próximo original
+
+        // troca os ponteiros
+        atual->proximo = atual->anterior;
+        atual->anterior = proximo;
+
+        anterior = atual;              // marca como já invertido
+        atual = proximo;               // avança
+    }
+
+    // antigo último virou o novo início
+    *inicio = anterior;
+}
+

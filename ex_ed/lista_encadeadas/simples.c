@@ -147,8 +147,8 @@ int remover_valor(No** cabeca, int valor) {
     if ((*cabeca)->valor == valor) {
         return remover_inicio(cabeca);
     }
-    No* atual = *cabeca;
-    No* anterior = NULL;
+    No* atual = (*cabeca)->proximo;
+    No* anterior = *cabeca;
 
     // Procura o valor
     while (atual != NULL && atual->valor != valor) {
@@ -214,6 +214,24 @@ void liberar_lista(No** cabeca) {
         remover_inicio(cabeca);
     }
 }
+
+void inverter_lista(No** cabeca) {
+    if (cabeca == NULL || *cabeca == NULL) return;
+
+    No* anterior = NULL;
+    No* atual = *cabeca;
+    No* proximo;
+
+    while (atual != NULL) {
+        proximo = atual->proximo;   // guarda quem vem depois
+        atual->proximo = anterior;  // inverte o ponteiro
+        anterior = atual;           // anda o anterior
+        atual = proximo;            // anda na lista
+    }
+
+    *cabeca = anterior; // novo início
+}
+
 
 int main() {
     No* lista = NULL;

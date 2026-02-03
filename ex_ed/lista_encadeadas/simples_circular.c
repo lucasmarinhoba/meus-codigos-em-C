@@ -169,33 +169,58 @@ int remover_fim(No** inicio){
 }
 
 
-int remover_valor(No** inicio, int valor){
-    if (!inicio || !*inicio) return -1; // Lista vazia
-
-    No* atual = *inicio;
-    No* anterior = NULL;
-
-    // percorre até voltar ao início
-    while (1) {
-        if (atual->dado == valor) {
-
-            // se é o primeiro nó
-            if (anterior == NULL)
-                return remover_inicio(inicio);
-
-            // remover nó do meio/fim
-            anterior->prox = atual->prox;
-            free(atual);
-            return valor;
-        }
-
-        anterior = atual;
-        atual = atual->prox;
-
-        // se voltou ao início, não achou
-        if (atual == *inicio)
-            break;
+int remover_valor(No** cabeca, int valor) {
+    if (!cabeca || !*cabeca) {
+        printf("Lista vazia\n");
+        return -1;
     }
 
-    return -1; // Valor não encontrado
+    No* atual = *cabeca;
+    No* anterior = NULL;
+
+    // Caso: remover o primeiro nó
+    if (atual->dado == valor) {
+        return remover_inicio(cabeca);
+    }
+
+    anterior = atual;
+    atual = atual->prox;
+
+    // Percorre até voltar ao início
+    while (atual != *cabeca && atual->dado != valor) {
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    // Não encontrou
+    if (atual == *cabeca) {
+        printf("Valor nao encontrado\n");
+        return -1;
+    }
+
+    // Remove nó do meio ou final
+    anterior->prox = atual->prox;
+    free(atual);
+
+    return valor;
+}
+
+void inverter_circular_simples(No** inicio) {
+    if (!inicio || !*inicio || (*inicio)->prox == *inicio)
+        return;
+
+    No *atual = *inicio;
+    No *anterior = NULL;
+    No *proximo;
+
+    while (atual->prox != *inicio) {
+        proximo = atual->prox;
+        atual->prox = anterior;
+        anterior = atual;
+        atual = proximo;
+    }
+
+    atual->prox = anterior;     // inverte último
+    (*inicio)->prox = atual;    // antigo primeiro vira último
+    *inicio = atual;            // novo início
 }
