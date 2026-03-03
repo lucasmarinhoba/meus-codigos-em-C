@@ -30,7 +30,7 @@ int pilha_vazia (Pilha* p){
 }
 
 int pop(Pilha* p, int* valor){
-    if (!p || pilha_vazia(p)) return 0;
+    if (!p || pilha_vazia(p) || !valor) return 0;
     *valor = p->elementos[p->indice];
     p->indice--;    
     return 1;
@@ -40,7 +40,7 @@ int push(Pilha* p, int valor){
     if (!p) return 0;
     if (pilha_cheia(p)){
         int* aux = (int*)realloc(p->elementos, sizeof(int) * 2*p->capacidade);
-        if ( aux == NULL){
+        if ( aux == p->elementos){
             return 0;
         }
         p->capacidade *= 2;

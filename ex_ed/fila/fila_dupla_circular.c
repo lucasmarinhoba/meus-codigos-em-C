@@ -30,22 +30,29 @@ int fila_vazia(Fila* f) {
 int enfileirar(Fila* f, int valor) {
     No* novo_no = (No*)malloc(sizeof(No));
     if (novo_no == NULL) {
-        return 0; // Falha ao alocar memória
+        return 0;
     }
+
     novo_no->valor = valor;
-    novo_no->proximo = NULL;
-    novo_no->anterior = f->fim;
 
     if (fila_vazia(f)) {
+        novo_no->proximo = novo_no;
+        novo_no->anterior = novo_no;
+
         f->inicio = novo_no;
         f->fim = novo_no;
     } else {
+        novo_no->proximo = f->inicio;
+        novo_no->anterior = f->fim;
+
         f->fim->proximo = novo_no;
+        f->inicio->anterior = novo_no;
+
         f->fim = novo_no;
     }
-    return 1; // Enfileirado com sucesso
-}
 
+    return 1;
+}
 int desenfileirar(Fila* f, int* valor) {
     if (fila_vazia(f)) {
         return 0; // Fila vazia
@@ -57,9 +64,11 @@ int desenfileirar(Fila* f, int* valor) {
         f->inicio = NULL;
         f->fim = NULL; // Fila ficou vazia
     } else {
-        f->inicio = f->inicio->proximo;
-        f->inicio->anterior = NULL; // O novo início não tem anterior
+        f->inicio = f->inicio->proximo; 
+        f->inicio->anterior = f->fim;
+        f->fim->proximo = f->inicio;
     }
+
     free(temp);
     return 1; // Desenfileirado com sucesso
 }
